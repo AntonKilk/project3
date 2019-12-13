@@ -4,14 +4,15 @@ import React from 'react';
 let Height = (props) => {
   
   return <div>
-    <div>{props.title}: {props.min}
-    <input type="range"
-    min={props.min}
-    max={props.max}
-    value={props.value}
-    onChange={props.setHeight}
-    ></input>{props.max}
-    <b> {props.value} {props.unit}</b>
+    <div>
+    {props.title}: {props.min}
+      <input type="range"
+        min={props.min}
+        max={props.max}
+        value={props.value}
+        onChange={props.setHeight}>
+      </input>{props.max}
+      <b> {props.value} {props.unit}</b>
     </div>
   </div>
 }
@@ -19,14 +20,15 @@ let Height = (props) => {
 let Weight = (props) => {
   
   return <div>
-    <div>{props.title}: {props.min}
-    <input type="range"
-    min={props.min}
-    max={props.max}
-    value={props.value}
-    onChange={props.setWeight}
-    ></input>{props.max}
-    <b> {props.value} {props.unit}</b>
+    <div>
+    {props.title}: {props.min}
+      <input type="range"
+        min={props.min}
+        max={props.max}
+        value={props.value}
+        onChange={props.setWeight} >
+      </input>{props.max}
+      <b> {props.value} {props.unit}</b>
     </div>
   </div>
 }
@@ -35,30 +37,34 @@ let Weight = (props) => {
 
 export default class App extends React.Component {
   state = {
-    height: "150",
-    weight: "50"
+    height: 150,
+    weight: 50
   }
 
   setHeight = (e) => {
-    this.setState({height: e.target.value})
+    parseInt(this.setState({height: e.target.value}))
   }
 
   setWeight = (e) => {
-    this.setState({weight: e.target.value})
+    parseInt(this.setState({weight: e.target.value}))
   }
 
-  bmi = () => {
-    let hNum = parseInt(this.state.height)
-    let wNum = parseInt(this.state.weight) 
-    let bmi = ( wNum /(hNum/100) ** 2 ).toFixed(1)
+  calculateBmi = (weight, height) => {
+    let bmi = (weight /(height/100) ** 2 ).toFixed(1)
     return bmi
   }
 
+  classifyBmi = (bmi) => {
+    return bmi <= 18.4 ? "Underweight" :
+    bmi <= 25 ? "Normal Weight" : 
+    bmi <= 30 ? "Overweight" :
+    bmi > 30 ? "Obese" : ""
+  }
+
   render() {
-    let diagnose = this.bmi() <= 18.4 ? "Underweight" :
-    this.bmi() <= 25 ? "Normal Weight" : 
-    this.bmi() <= 30 ? "Overweight" :
-    this.bmi() > 30 ? "Obese" : ""
+    let {weight, height} = this.state
+    let bmi = this.calculateBmi(weight, height)
+    let diagnose = this.classifyBmi(bmi)
 
     return <div>
       <Height
@@ -77,10 +83,9 @@ export default class App extends React.Component {
         value={this.state.weight} 
         setWeight={this.setWeight}
       />
-      <div>BMI: <b> {this.bmi()}</b> <b> {diagnose}</b></div>
+      <div>BMI: <b> {bmi}</b> <b> {diagnose}</b></div>
     </div>
   }
-  
 }
 
 
